@@ -1,2 +1,2 @@
-# filetransfer
-File Transfer via Socket
+# Filetransfer
+Java File Transfer via Socket
