@@ -5,7 +5,11 @@ package com.ociv.filetransfer;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -22,6 +26,7 @@ import com.ociv.filetranfer.Server;
  * @author Frank
  *
  */
+
 public class ServerTest {
 	
 	private Server server;
@@ -29,7 +34,7 @@ public class ServerTest {
 	@Before 
 	public void setUp() {
 		
-    	ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+    	ApplicationContext context = new ClassPathXmlApplicationContext("Beans_Test.xml");
     	
     	server = (Server) context.getBean("FileTransferServer");	
     	
@@ -50,9 +55,19 @@ public class ServerTest {
 	public final void testRun() {
 		
 		try {
-			Socket sock = new Socket("127.0.0.1", server.getSocketport());
+			Socket sock1 = new Socket("127.0.0.1", server.getSocketport());			
+			Assert.assertEquals( "is Connected", true ,sock1.isConnected());			
+			read(sock1, "test1.txt");			
 			
-			Assert.assertEquals( "is Connected", true ,sock.isConnected());
+			Socket sock2 = new Socket("127.0.0.1", server.getSocketport());
+			read(sock2, "test2.txt");
+			
+			Socket sock3 = new Socket("127.0.0.1", server.getSocketport());
+			read(sock3, "test3.txt");
+			
+			Socket sock4 = new Socket("127.0.0.1", server.getSocketport());
+			read(sock4, "test4.txt");
+	
 			
 		} catch (UnknownHostException e) {
 			
@@ -62,6 +77,37 @@ public class ServerTest {
 			
 			fail("Connection refused");
 		}
+	}
+
+	/**
+	 * 
+	 * @param sock
+	 * @param file
+	 * @throws IOException
+	 */
+	private void read(Socket sock, String file) throws IOException {
+		
+		byte [] mybytearray  = new byte [6022386];
+		
+		InputStream is = sock.getInputStream();
+			
+		FileOutputStream fos = new FileOutputStream(file);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		
+		int bytesRead = is.read(mybytearray,0,mybytearray.length);
+		int current = bytesRead;
+		
+	    do {
+	    	bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
+	    	
+	    	if(bytesRead >= 0) 
+	    		current += bytesRead;
+	     }
+	    
+	    while(bytesRead > -1);
+	    
+	    bos.write(mybytearray, 0 , current);
+	    bos.flush();		
 	}
 
 	/**

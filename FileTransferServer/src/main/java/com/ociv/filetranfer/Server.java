@@ -21,6 +21,11 @@ public class Server implements Runnable {
 	
 	private int socketport;
 	
+	/*
+	 * used only for testing
+	 */
+	private int socketsleep;
+	
 	private ServerSocket servsock;
 	
 	protected boolean isStopped = false;	
@@ -48,7 +53,7 @@ public class Server implements Runnable {
 			while(! isStopped()){
 				
 				try {					
-					sock = servsock.accept();					
+					sock = servsock.accept();
 					log.info("Accepted connection : " + sock);
 				} 
 				catch (IOException e) {
@@ -62,10 +67,17 @@ public class Server implements Runnable {
 	                throw new RuntimeException("Error accepting client connection", e);
 				}
 				
+		    	try {
+		    	    Thread.sleep( getSocketsleep() );
+		    	} catch (InterruptedException e) {
+		    	    e.printStackTrace();  
+		    	}
+				
 				new Thread( new ClientRequestDispatcher( sock, "Multithreaded Server")).start();
-	            
-	            log.info("Server Stopped.") ;
+	                        
 			}
+			
+			log.info("Server Stopped.") ;
 		}
 	}
 	
@@ -93,5 +105,19 @@ public class Server implements Runnable {
         }
         
         return true;
+	}
+
+	/**
+	 * @return the socketsleep
+	 */
+	public int getSocketsleep() {
+		return socketsleep;
+	}
+
+	/**
+	 * @param socketsleep the socketsleep to set
+	 */
+	public void setSocketsleep(int socketsleep) {
+		this.socketsleep = socketsleep;
 	}
 }
