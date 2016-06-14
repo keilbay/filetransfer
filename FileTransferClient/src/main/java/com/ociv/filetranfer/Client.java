@@ -13,6 +13,8 @@ import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.ociv.filetranfer.FileTransferHandler.SocketHandlerInterface;
+
 /**
  * @author Frank
  *
@@ -34,6 +36,8 @@ public class Client {
 	private FileOutputStream fos;
 	
 	BufferedOutputStream bos;
+	
+	private SocketHandlerInterface<?> handler;
 	
 	/*
 	 * file size temporary hard coded
@@ -114,5 +118,13 @@ public class Client {
 	public void setServer(String server) {
 		this.server = server;
 	}
+	
+	
+	public SocketHandlerInterface<?> getHandler() {
+		return handler;
+	}
 
+	public void setHandler(SocketHandlerInterface<?> handler) {
+		this.handler = handler;
+	}
 }
