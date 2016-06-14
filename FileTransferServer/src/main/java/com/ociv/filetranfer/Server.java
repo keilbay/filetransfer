@@ -67,11 +67,7 @@ public class Server implements Runnable {
 	                throw new RuntimeException("Error accepting client connection", e);
 				}
 				
-		    	try {
-		    	    Thread.sleep( getSocketsleep() );
-		    	} catch (InterruptedException e) {
-		    	    e.printStackTrace();  
-		    	}
+				letsSocketSleep();
 				
 				new Thread( new ClientRequestDispatcher( sock, "Multithreaded Server")).start();
 	                        
@@ -81,7 +77,20 @@ public class Server implements Runnable {
 		}
 	}
 	
-    public synchronized void stop() {
+	/**
+	 * used for testing
+	 */
+    private void letsSocketSleep() {
+    	
+    	try {
+    	    Thread.sleep( getSocketsleep() );
+    	} catch (InterruptedException e) {
+    		log.error("Error sleeping server", e); 
+    	}
+		
+	}
+
+	public synchronized void stop() {
     	
         this.isStopped = true;        
         try {

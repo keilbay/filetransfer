@@ -6,7 +6,6 @@ package com.ociv.filetransfer;
 import static org.junit.Assert.*;
 
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,17 +56,6 @@ public class ServerTest {
 		try {
 			Socket sock1 = new Socket("127.0.0.1", server.getSocketport());			
 			Assert.assertEquals( "is Connected", true ,sock1.isConnected());			
-			read(sock1, "test1.txt");			
-			
-			Socket sock2 = new Socket("127.0.0.1", server.getSocketport());
-			read(sock2, "test2.txt");
-			
-			Socket sock3 = new Socket("127.0.0.1", server.getSocketport());
-			read(sock3, "test3.txt");
-			
-			Socket sock4 = new Socket("127.0.0.1", server.getSocketport());
-			read(sock4, "test4.txt");
-	
 			
 		} catch (UnknownHostException e) {
 			
@@ -80,8 +68,7 @@ public class ServerTest {
 	}
 
 	/**
-	 * 
-	 * @param sock
+	 * 	 * @param sock
 	 * @param file
 	 * @throws IOException
 	 */
