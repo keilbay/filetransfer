@@ -10,6 +10,7 @@ import java.net.Socket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.ociv.filetranfer.handler.SocketHandlerInterface;
 import com.ociv.filetranfer.request.ClientRequestDispatcher;
 
 /**
@@ -20,6 +21,8 @@ public class Server implements Runnable {
 	private static final Log log = LogFactory.getLog(Server.class);
 	
 	private int socketport;
+	
+	private SocketHandlerInterface handler;
 	
 	/*
 	 * used only for testing
@@ -69,7 +72,7 @@ public class Server implements Runnable {
 				
 				letsSocketSleep();
 				
-				new Thread( new ClientRequestDispatcher( sock, "Multithreaded Server")).start();
+				new Thread( new ClientRequestDispatcher( sock, getHandler())).start();
 	                        
 			}
 			
@@ -128,5 +131,19 @@ public class Server implements Runnable {
 	 */
 	public void setSocketsleep(int socketsleep) {
 		this.socketsleep = socketsleep;
+	}
+
+	/**
+	 * @return the handler
+	 */
+	public SocketHandlerInterface getHandler() {
+		return handler;
+	}
+
+	/**
+	 * @param handler the handler to set
+	 */
+	public void setHandler(SocketHandlerInterface handler) {
+		this.handler = handler;
 	}
 }

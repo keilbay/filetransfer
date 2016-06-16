@@ -1,4 +1,4 @@
-package com.ociv.filetranfer.FileTransferHandler;
+package com.ociv.filetranfer.handler;
 
 /**
  * Hello world!

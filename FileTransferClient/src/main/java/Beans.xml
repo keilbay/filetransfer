@@ -6,8 +6,11 @@
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
    <bean id="FileTransferClient" class="com.ociv.filetranfer.Client">
-       <property name="socketport" value="1234"/>
+       <property name="socketport" value="8080"/>
        <property name="server" value="127.0.0.1"/>
+       <property name="handler" >
+       		<bean id="SocketHandler" class="com.ociv.filetranfer.handler.SocketHandlerImpl" />
+       </property>
    </bean>
 
 </beans>

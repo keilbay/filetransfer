@@ -3,13 +3,14 @@
  */
 package com.ociv.filetranfer.request;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.ociv.filetranfer.handler.SocketHandlerInterface;
 
 
 /**
@@ -19,14 +20,14 @@ import org.apache.commons.logging.LogFactory;
 public class ClientRequestDispatcher implements Runnable {
 	
     protected Socket clientSocket = null;
-    protected String serverText   = null;
+    protected SocketHandlerInterface handler = null;
     
     private static final Log log = LogFactory.getLog(ClientRequestDispatcher.class);
     
-    public ClientRequestDispatcher( Socket clientSocket, String serverText ) {
+    public ClientRequestDispatcher( Socket clientSocket, SocketHandlerInterface socketHandler ) {
     	    	
         this.clientSocket = clientSocket;
-        this.serverText   = serverText;
+        this.handler = socketHandler;
     }
 
 	/* (non-Javadoc)
@@ -36,15 +37,8 @@ public class ClientRequestDispatcher implements Runnable {
 		
         try {
         	
-            InputStream input  = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream();
-            long time = System.currentTimeMillis();
-            output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " + 
-            		this.serverText + " - " + time + "").getBytes());
-            output.close();
-            input.close();
-            log.info("Request processed: " + time);
-            
+        	handler.send(clientSocket, new File("test.txt"));
+        	//log.info("Request processed: " + time);            
         } 
         catch (IOException e) {
             log.error(e);

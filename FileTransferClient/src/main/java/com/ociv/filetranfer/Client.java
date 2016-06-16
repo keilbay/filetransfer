@@ -3,17 +3,15 @@
  */
 package com.ociv.filetranfer;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.ociv.filetranfer.FileTransferHandler.SocketHandlerInterface;
+import com.ociv.filetranfer.handler.SocketHandlerInterface;
 
 /**
  * @author Frank
@@ -27,35 +25,24 @@ public class Client {
 	
 	private String server;
 
-	private Socket sock;	
-	
-	private String file = "src/main/resources/download.txt";
-	
-	private InputStream is;
-	
-	private FileOutputStream fos;
-	
-	BufferedOutputStream bos;
-	
-	private SocketHandlerInterface<?> handler;
-	
-	/*
-	 * file size temporary hard coded
-	 * should bigger than the file to be downloaded
-	 */
-	public final static int FILE_SIZE = 6022386;
+	private Socket serverSocket;
+
+	private SocketHandlerInterface handler;	
 
 	public void run() throws IOException {
 		
 		log.info("Run Client");
 		
 		try {
-			sock = new Socket(server, socketport);
+			serverSocket = new Socket(server, socketport);
 			
 			log.info("Connected to Server " + server);
 			
+			File f = (File) getHandler().receive(serverSocket);
+			
+			/*
 			byte [] mybytearray  = new byte [FILE_SIZE];
-			is = sock.getInputStream();
+			is = serverSocket.getInputStream();
 			fos = new FileOutputStream(file);
 			bos = new BufferedOutputStream(fos);
 			
@@ -75,18 +62,20 @@ public class Client {
 		    bos.flush();
 		    
 		    log.info("File " + file + " downloaded (" + current + " bytes read)");
+		    */
 			
 			
 		} catch (UnknownHostException e) {
 			log.error("Can't connect to Server " + server, e);
-		} catch (IOException e) {
-			log.error("Problem while reading " + file, e);
 		}
+		/*catch (IOException e) {
+			log.error("Problem while reading " + file, e);
+		}*/
 	    finally {
 	    	
-	        if (fos != null) fos.close();
-	        if (bos != null) bos.close();
-	        if (sock != null) sock.close();
+	        //if (fos != null) fos.close();
+	        //if (bos != null) bos.close();
+	        if (serverSocket != null) serverSocket.close();
 	    }
 
 	}
@@ -117,14 +106,13 @@ public class Client {
 	 */
 	public void setServer(String server) {
 		this.server = server;
-	}
+	}	
 	
-	
-	public SocketHandlerInterface<?> getHandler() {
+	public SocketHandlerInterface getHandler() {
 		return handler;
 	}
 
-	public void setHandler(SocketHandlerInterface<?> handler) {
+	public void setHandler(SocketHandlerInterface handler) {
 		this.handler = handler;
 	}
 }
